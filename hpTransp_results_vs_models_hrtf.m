@@ -49,7 +49,7 @@ for stimType1 = 1:max(T.stimType)
     clear tsA1 tsA2 tsA3 tsA4 tsA5 rsH
     
     % read in test files
-    testDirectory = 'hp_transparency_mushra_stimuli/';
+    testDirectory = 'hp_transparency_testHRTFs/';
     
     for i = 1:length(testDir)
         if stimType1 < 3
