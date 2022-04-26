@@ -1,7 +1,6 @@
-% GETTING USERS IDs AND RESULT FILES
-folderName = '0_lisTestResults_hor';
-%cd(folderName);
-folderName = 'C:\Users\nils\Documents\Aalto\Projects\2021_transparent_headphones\transparency_evaluation\0_lisTestResults_hor'
+close% GETTING USERS IDs AND RESULT FILES
+folderName = '/Users/lladop1/Documents/03-TransparentHeadphones/Data/0_LisTestResults_hor';
+cd(folderName);
 
 myIDs = dir(folderName+"/ID*");
 
@@ -17,8 +16,8 @@ myResFiles = dir(folderName+"/*/ID*");
 % 6: response azimuth angle
 % 7: response time
 % 8: _empty
-% 9: 1: source is front; -1: source is back; 0: source is 90?? or 270??
-% 10: 1: response is front; -1: response is back; 0: response is 90?? or 270??
+% 9: 1: source is front; -1: source is back; 0: source is 90° or 270°
+% 10: 1: response is front; -1: response is back; 0: response is 90° or 270°
 % 11: 1: No Front-back confusion, -1: Front-back confusion ; 0: Not applicable
 % 12: -1: front2back confusion; 1: back2front confusion; 0: Not applicable
 
@@ -35,7 +34,7 @@ myData = myData(myData(:,5)~=0,:); %ERASING INIT VALUES (NUM_TRIAL = 0)
 
 srcChannels = [1 2 3 4 5 6 7 8 9 10 11 12 33 34 35 36 37 38];
 srcPos = [120 90 75 60 45 30 15 0 345 330 315 300 285 270 240 210 180 150];
-% CONVERTING CHANNELS INTO LOCATIONS (AZIMUTH ANGLE, 10?? IS LEFT, 350?? IS
+% CONVERTING CHANNELS INTO LOCATIONS (AZIMUTH ANGLE, 10° IS LEFT, 350° IS
 % RIGHT)
 for iCh = 1:length(srcChannels)
     idxChTrg = find(myData(:,5) == srcChannels(iCh));
@@ -46,7 +45,7 @@ end
 
 conditions = unique(myData(:,2));
 COND_DICT = ["openEar","quest2" "mySphereOpen", "mySphereClosed", "diy","hd650"];
-
+COND_DICT_CX = [ "C1", "C2", "C3", "C4", "C5", "C6"];
 
 %% COUNTING FRONTBACK CONFUSIONS ONLY FOR THE SELECTED ANGLES
 for iFB = 1:length(myData)
@@ -54,7 +53,7 @@ for iFB = 1:length(myData)
         if myData(iFB,5) > 270 | myData(iFB,5) < 90
             myData(iFB,9) = 1; %FRONT
         elseif myData(iFB,5) == 90 | myData(iFB,5) == 270
-            myData(iFB,9) = 0; % 90?? OR 270??
+            myData(iFB,9) = 0; % 90° OR 270°
         else
             myData(iFB,9) = -1; %BACK
         end
@@ -62,7 +61,7 @@ for iFB = 1:length(myData)
         if myData(iFB,6) > 270 | myData(iFB,6) < 90
             myData(iFB,10) = 1; %FRONT
         elseif myData(iFB,6) == 90 | myData(iFB,6) == 270
-            myData(iFB,10) = 0; % 90?? OR 270??
+            myData(iFB,10) = 0; % 90° OR 270°
         else
             myData(iFB,10) = -1; %BACK
         end
@@ -101,32 +100,7 @@ end
 FB_BF_avg = round(mean(FB_BF),2);
 FB_avg = round(mean(FB),2);
 BF_avg = round(mean(BF),2);
-FB_BF_summary_avg = [FB_BF_avg;FB_avg;BF_avg]
-
-%% PLOT
-for iCond = 1:(length(conditions)) % -1) %exclude test
-    figure;
-    % for idx = 1:length(myIDs)
-    clear auxPlot;
-    for idSrcPos = 1:length(srcPos)
-        auxPlot = find(myData(:,2) == conditions(iCond) &  myData(:,5) == srcPos(idSrcPos));       %myData(:,1) == str2num(myIDs(idx).name(end-1:end))
-        auxPlotVal_unique = unique(myData(auxPlot,6));
-
-        for idPl = 1:length(auxPlotVal_unique)
-            auxPlotCount = sum((myData(auxPlot,6) == auxPlotVal_unique(idPl)));
-            scatter(srcPos(idSrcPos),auxPlotVal_unique(idPl),auxPlotCount*100/length(myIDs),'filled','MarkerFaceColor','#0072BD'); hold on;
-        end
-    end
-    title(COND_DICT(iCond))
-    xlim([-15 360])
-    xticks([0:45:360])
-    xticklabels([0:45:180, -135:45:-45]);
-    ylim([-15 360])
-    yticks([0:45:360])
-    yticklabels([0:45:180, -135:45:-45]);
-    grid on;
-end
-%distFig();
+FB_BF_summary_avg = [FB_BF_avg;FB_avg;BF_avg];
 
 %% NOT COUNTING FRONT BACK CONFUSIONS, ONLY FOR PLOTS (DISCARDING FRONT BACK CONFUSIONS)
 
@@ -134,7 +108,7 @@ for iFB = 1:length(myData)
     if myData(iFB,5) > 270 | myData(iFB,5) < 90
         myData(iFB,9) = 1; %FRONT
     elseif myData(iFB,5) == 90 | myData(iFB,5) == 270
-        myData(iFB,9) = 0; % 90?? OR 270??
+        myData(iFB,9) = 0; % 90° OR 270°
     else
         myData(iFB,9) = -1; %BACK
     end
@@ -142,7 +116,7 @@ for iFB = 1:length(myData)
     if myData(iFB,6) > 270 | myData(iFB,6) < 90
         myData(iFB,10) = 1; %FRONT
     elseif myData(iFB,6) == 90 | myData(iFB,6) == 270
-        myData(iFB,10) = 0; % 90?? OR 270??
+        myData(iFB,10) = 0; % 90° OR 270°
     else
         myData(iFB,10) = -1; %BACK
     end
@@ -172,69 +146,93 @@ for iCond = 1:length(conditions)
         myAziIdx = find(ismember(myData(:,5),aziPos(iAziPos))==1 & myData(:,12) == 0 & myData(:,2) == conditions(iCond));
         myAziAvg(iAziPos,iCond) = mean(myDataNegative(myAziIdx,6));
         myAziStd(iAziPos,iCond) = std(myDataNegative(myAziIdx,6));
+        myAziMedian(iAziPos,iCond) = median(myDataNegative(myAziIdx,6));
     end
 end
-%% Violinplot each condition
-% aziPosNegative = [0,15,30,45,60,75,90,-90,-75,-60,-45,-30,-15];
-% 
-% for iCond = 1:length(conditions)
-%     figure;
-% 	myAziIdx = find(ismember(myDataNegative(:,5),aziPosNegative)==1 & myData(:,12) == 0 & myData(:,2) == conditions(iCond));%,15,30,45,60,75,90,270,285,300,315,330,345]);% & myData(:,12) == 0);
-%     violinplot(myDataNegative(myAziIdx,6),myDataNegative(myAziIdx,5),'ShowMean',true);
-%     title(COND_DICT(iCond));
-%     ylim([-120 120])
-%     yticks([-90:15:90])
-%     grid on;
-% end
-% distFig()
 
-%% Violinplot each sound source direction
-% aziPosNegative = [0,15,30,45,60,75,90,-90,-75,-60,-45,-30,-15];
-% 
-% for iAziPos = 1:length(aziPosNegative)
-%     figure;
-% 	myAziIdx = find(ismember(myDataNegative(:,5),aziPosNegative(iAziPos))==1 & myData(:,12) == 0);%,15,30,45,60,75,90,270,285,300,315,330,345]);% & myData(:,12) == 0);
-%     violinplot(myDataNegative(myAziIdx,6),myDataNegative(myAziIdx,2)+aziPos(iAziPos),'ShowMean',true);
-%     
-%     ylim([aziPosNegative(iAziPos)-30 aziPosNegative(iAziPos)+30])
-%     title([aziPosNegative(iAziPos) + "??"])
-%     xticks(1:6)
-%     xticklabels(COND_DICT(1:end))
-%     xtickangle(30)
-% end
-% distFig()
+%% FRONT SQUARED AZIMUTH ERROR
 
-%% BOXCHART each condition
-aziPosNegative = [0,15,30,45,60,75,90,-90,-75,-60,-45,-30,-15];
-
-for iCond = 1:length(conditions)
-    figure;
-	myAziIdx = find(ismember(myDataNegative(:,5),aziPosNegative)==1 & myData(:,12) == 0 & myData(:,2) == conditions(iCond));%,15,30,45,60,75,90,270,285,300,315,330,345]);% & myData(:,12) == 0);
-    boxchart(myDataNegative(myAziIdx,6),myDataNegative(myAziIdx,5));
-    A = boxchart(myDataNegative(myAziIdx,5)./15,myDataNegative(myAziIdx,6),'Notch','on');%,'boxfacecolor',colorder(iCond+1,:));'
-    hold on;
-    title(COND_DICT(iCond));
-    ylim([-120 120])
-    yticks([-90:15:90])
-    xticks([-6:6])
-    xticklabels([-90:15:90])
-    grid on;
+for iFB = 1:length(myData)
+    if (ismember(myData(iFB,5),aziPos) == 1 & myData(iFB,11) == 1 )
+        myData(iFB,13) = 1;
+        myData(iFB,14) = min([abs(myData(iFB,5)- myData(iFB,6)), abs(myData(iFB,5) + 360 - myData(iFB,6)), abs(myData(iFB,5) - 360 - myData(iFB,6))])^2;
+    end
 end
-distFig()
+
+%% FRONT AZIMUTH ERROR (RMSE)
+
+myIDsN = unique(myData(:,1));
+for idx = 1:length(myIDs)
+    for iCond = 1:length(conditions)
+        myAzimIdx = find(ismember(myData(:,5),aziPos)==1 & myData(:,13) == 1 & myData(:,2) == conditions(iCond) & myData(:,1) == myIDsN(idx));
+        frontAE(idx,iCond) = sqrt(nanmean(myData(myAzimIdx,14)));
+    end
+end
+frontAE_avg = nanmean(frontAE);
 
 
-%% BOXCHART each sound source direction
-% aziPosNegative = [0,15,30,45,60,75,90,-90,-75,-60,-45,-30,-15];
-% 
-% for iAziPos = 1:length(aziPosNegative)
-%     figure;
-% 	myAziIdx = find(ismember(myDataNegative(:,5),aziPosNegative(iAziPos))==1 & myData(:,12) == 0);%,15,30,45,60,75,90,270,285,300,315,330,345]);% & myData(:,12) == 0);
-%     B = boxchart(myDataNegative(myAziIdx,2),myDataNegative(myAziIdx,6),'Notch','on');%+aziPos(iAziPos));
-%     
-%     ylim([aziPosNegative(iAziPos)-30 aziPosNegative(iAziPos)+30])
-%     title([aziPosNegative(iAziPos) + "??"])
-%     xticks(0:5)
-%     xticklabels(COND_DICT(1:end))
-%     xtickangle(30)
-% end
-% distFig()
+%% PLOT - RED FOR CONFUSIONS
+
+srcPosNeg = unique(myDataNegative(:,5));
+
+
+for iCond = 1:(length(conditions)) % -1) %exclude test
+    figure;
+    
+    for idSrcPos = 1:length(srcPosNeg)
+        clear auxPlot;
+        auxPlot = find(myData(:,2) == conditions(iCond) &  myDataNegative(:,5) == srcPosNeg(idSrcPos) & myData(:,11)  ~= -1 & mod(myData(:,5),30) == 0);       %myData(:,1) == str2num(myIDs(idx).name(end-1:end))
+        auxPlotVal_unique = unique(myDataNegative(auxPlot,6));
+
+        for idPl = 1:length(auxPlotVal_unique)
+            auxPlotCount = sum((myDataNegative(auxPlot,6) == auxPlotVal_unique(idPl)));
+            scatter(srcPosNeg(idSrcPos),auxPlotVal_unique(idPl),auxPlotCount*150/length(myIDs),'filled','MarkerFaceColor','#0072BD'); hold on;
+        end
+        hold on;
+        
+        clear auxPlot;
+        auxPlot = find(myData(:,2) == conditions(iCond) &  myDataNegative(:,5) == srcPosNeg(idSrcPos) & myData(:,11) == -1 & mod(myData(:,5),30) == 0);       %myData(:,1) == str2num(myIDs(idx).name(end-1:end))
+        auxPlotVal_unique = unique(myDataNegative(auxPlot,6));
+
+        for idPl = 1:length(auxPlotVal_unique)
+            auxPlotCount = sum((myDataNegative(auxPlot,6) == auxPlotVal_unique(idPl)));
+            scatter(srcPosNeg(idSrcPos),auxPlotVal_unique(idPl),auxPlotCount*150/length(myIDs),'filled','MarkerFaceColor','#D95319'); hold on;
+        end
+        
+        % NO FILL WHEN SOURCE ANGLE IS NOT MULTIPLE OF 30°
+        clear auxPlot;
+        auxPlot = find(myData(:,2) == conditions(iCond) &  myDataNegative(:,5) == srcPosNeg(idSrcPos) & myData(:,11)  ~= -1 & mod(myData(:,5),30) ~= 0);       %myData(:,1) == str2num(myIDs(idx).name(end-1:end))
+        auxPlotVal_unique = unique(myDataNegative(auxPlot,6));
+
+        for idPl = 1:length(auxPlotVal_unique)
+            auxPlotCount = sum((myDataNegative(auxPlot,6) == auxPlotVal_unique(idPl)));
+            scatter(srcPosNeg(idSrcPos),auxPlotVal_unique(idPl),auxPlotCount*150/length(myIDs),'MarkerEdgeColor','#0072BD'); hold on;
+        end
+        hold on;
+        
+        clear auxPlot;
+        auxPlot = find(myData(:,2) == conditions(iCond) &  myDataNegative(:,5) == srcPosNeg(idSrcPos) & myData(:,11) == -1 & mod(myData(:,5),30) ~= 0);       %myData(:,1) == str2num(myIDs(idx).name(end-1:end))
+        auxPlotVal_unique = unique(myDataNegative(auxPlot,6));
+
+        for idPl = 1:length(auxPlotVal_unique)
+            auxPlotCount = sum((myDataNegative(auxPlot,6) == auxPlotVal_unique(idPl)));
+            scatter(srcPosNeg(idSrcPos),auxPlotVal_unique(idPl),auxPlotCount*150/length(myIDs),'MarkerEdgeColor','#D95319'); hold on;
+        end
+        
+        
+    end
+    %title(COND_DICT(iCond))
+    title(COND_DICT_CX(iCond));
+    xlim([-165 195])
+    xticks([-150:30:180])
+    xticklabels([-150:30:180]);
+    ylim([-165 195])
+    yticks([-150:30:180])
+    yticklabels([-150:30:180]);
+    xlabel('Sound source angle (°)')
+    ylabel('Response angle (°)')
+    grid on;
+    %print(gcf, COND_DICT_CX(iCond) + "_hor_results.pdf", '-dpdf','-r0','-bestfit')
+    
+end
+distFig();
