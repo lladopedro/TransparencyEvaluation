@@ -20,61 +20,122 @@ SOFAfile_template=fullfile(SOFArepository, 'database', sofaFolder, sofaFileName_
 ObjFull_template=SOFAload(SOFAfile_template);
 
 %%
-[sti,fs] = audioread('stiShort_transparent.wav');
+%[sti,fs] = audioread('stiShort_transparent.wav');
+for iSti = 1:1
+    %[sti,fs] = audioread("stiShort_transparent_"+iSti+".wav");
+    [sti,fs] = audioread('stiShort_transparent.wav');
 
-for i = 1:length(mySOFAfiles)
-    device_id(i) = convertCharsToStrings(mySOFAfiles(i).name);
-    %display(device_id(i))
-    sofaFileName_target = mySOFAfiles(i).name;
-    %sofaFileName_target = '0_open_ear.sofa';
+    k = 1;
+    for gamma_eval = 6
+        for eps_eval = 17
+            for i = 1:length(mySOFAfiles)
+                device_id(i) = convertCharsToStrings(mySOFAfiles(i).name);
+                %display(device_id(i))
+                sofaFileName_target = mySOFAfiles(i).name;
+                %sofaFileName_target = '0_open_ear.sofa';
 
-    %SOFAfile_target=fullfile(SOFAdbPath, 'database', sofaFolder, sofaFileName_target);
-    SOFAfile_target=fullfile(SOFArepository, 'database', sofaFolder, sofaFileName_target);
-    ObjFull_target=SOFAload(SOFAfile_target);
+                %SOFAfile_target=fullfile(SOFAdbPath, 'database', sofaFolder, sofaFileName_target);
+                SOFAfile_target=fullfile(SOFArepository, 'database', sofaFolder, sofaFileName_target);
+                ObjFull_target=SOFAload(SOFAfile_target);
 
-%     hor_idx = find(ObjFull_target.SourcePosition(:,2) == 0);
-%     for hi = 1:length(hor_idx)
-%         conv_noise(:,1) = conv(sti,squeeze(ObjFull_target.Data.IR(hor_idx(hi),1,:)));
-%         conv_noise(:,2) = conv(sti,squeeze(ObjFull_target.Data.IR(hor_idx(hi),2,:)));
+                hor_idx = find(ObjFull_target.SourcePosition(:,2) == 0);
+                for hi = 1:length(hor_idx)
+                    conv_noise(:,1) = conv(sti,squeeze(ObjFull_target.Data.IR(hor_idx(hi),1,:)));
+                    conv_noise(:,2) = conv(sti,squeeze(ObjFull_target.Data.IR(hor_idx(hi),2,:)));
+
+                    out = may2011(conv_noise,fs);
+                    azEst(i,hi) = -1 * mode(mode(out.azimuth(:,:)')); % positive azimuth inconsistent between model and IR
+
+                end
+%                 clear p
+%                 j = 1;
 % 
-%         out = may2011(conv_noise,fs);
-%         azEst(i,hi) = -1 * mode(mode(out.azimuth(:,:)')); % positive azimuth inconsistent between model and IR
+%                 for latAngle = [60, 30, 0, -30, -60] % [60, 30, 0, -30, -60]
+%                     [p,rang,tang] = baumgartner2014(ObjFull_target, ObjFull_template,'gamma',gamma_eval,'mrsmsp',eps_eval,'lat',latAngle,'rangsamp',180,'S',0.21,'stim',sti);%,'lat',round(ObjFull_target.SourcePosition(hor_idx(hi))),1);
+%                     idx0 = find(tang == 0);
+%                     idx180 = find(tang == 180);
+%             %         figure;
+%             %         bar(rang,squeeze(p(:,[idx0 idx180])))
+%             %         title(device_id(i) + " - Lateral angle: " + latAngle,'Interpreter','none')
+%                     p_conf_f2b(i,j) = p(2,idx0);
+%                     p_conf_b2f(i,j) = p(1,idx180);
+%                     %p_no_conf(i,j) = min(p(1,idx0)/p(2,idx0), p(2,idx180)/p(1,idx180));
 % 
-%     end
-    clear p
-    j = 1;
-    for latAngle = [60, 30, 0, -30, -60] % [60, 30, 0, -30, -60]
-        [p,rang,tang] = baumgartner2014(ObjFull_target, ObjFull_template,'lat',latAngle,'rangsamp',180);%,'lat',round(ObjFull_target.SourcePosition(hor_idx(hi))),1);
-        idx0 = find(tang == 0);
-        idx180 = find(tang == 180);
-%         figure;
-%         bar(rang,squeeze(p(:,[idx0 idx180])))
-%         title(device_id(i) + " - Lateral angle: " + latAngle,'Interpreter','none')
-        p_conf_f2b(i,j) = p(2,idx0);
-        p_conf_b2f(i,j) = p(1,idx180);
-        %p_no_conf(i,j) = min(p(1,idx0)/p(2,idx0), p(2,idx180)/p(1,idx180));
+%                     j = j+1;
+%                 end
+             end
+% 
+%             p_conf = (p_conf_f2b + p_conf_b2f) / 2;
+%             p_conf_avg(k,:) = mean(p_conf');
+% 
+%             RMSE(k) = sqrt(mean((p_conf_avg(k) - FB_BF_avg/100).^2));
+%             MAE(k) = mean(abs(p_conf_avg(k) - FB_BF_avg/100));
 
-        j = j+1;
+%             figure;
+%             plot(FB_BF_avg/100,'--o','LineWidth',1.5,'MarkerSize',10);hold on;
+%             plot(p_conf_avg(k,:),':d','LineWidth',1.5,'MarkerSize',10);
+%             %offset = p_conf_avg(k,1) - FB_BF_avg(1)/100;
+%             %plot(p_conf_avg(k,:)-offset);
+%             legend("Subjective", "Estimated",'Location','northwest')
+%             xlim([0 7])
+%             xticks([1:6])
+%             xticklabels(COND_DICT)
+%             xtickangle(30)
+%             title("Front-back confusion in the horizontal plane")
+%             ylabel("Probability of front-back confusion")
+%             xlabel("Device")
+% 
+%             [r,p] = corrcoef(p_conf_avg(k,:),FB_BF_avg)
+%             rx(k) = r(1,2);
+%             px(k) = p(1,2);
+%             k = k+1;
+        end
     end
-end
 
-p_conf = p_conf_f2b + p_conf_b2f;
-p_conf_avg = mean(p_conf')
+[ObjFull_template.SourcePosition(hor_idx,1) azEst']
 
+%FrontAzError = (azEst(:,3:13)' - ObjFull_template.SourcePosition(hor_idx(3:13),1));
+FrontAzError = (azEst(:,2:14)' - ObjFull_template.SourcePosition(hor_idx(2:14),1));
+estFrontAE(iSti,:) = sqrt(mean(FrontAzError.^2));
+% 
+% if iSti == 1
+%     figure;
+%     load('frontAE_avg_subj');
+%     plot(frontAE_avg,'--o','LineWidth',1.5,'MarkerSize',10); hold on;
+% end
+%plot(estFrontAE(iSti,:),':d','LineWidth',1.5,'MarkerSize',10); hold on;
+plot(estFrontAE(iSti,:),'k','LineWidth',1.5,'MarkerSize',10); hold on;
 
-figure;
-plot(FB_BF_avg/100);hold on;
-plot(p_conf_avg);
 legend("Subjective", "Estimated",'Location','northwest')
 xlim([0 7])
+ylim([0 15])
 xticks([1:6])
 xticklabels(COND_DICT)
 xtickangle(30)
-title("Front-back confusion in the horizontal plane")
-ylabel("Probability of front-back confusion")
+title("Azimuth error in the frontal horizontal hemiplane")
+ylabel("Azimuth error (°)")
 xlabel("Device")
+[raux,paux] = corrcoef(frontAE_avg,estFrontAE(iSti,:));
+r(iSti) = raux(1,2);
+p(iSti) = paux(1,2);
+end
 
-[r,p] = corrcoef(p_conf_avg,FB_BF_avg);
+% estFrontAEavg = mean(estFrontAE);
+% 
+% figure;
+% load('frontAE_avg_subj');
+% plot(frontAE_avg,'--o','LineWidth',1.5,'MarkerSize',10); hold on;
+% plot(estFrontAEavg,':d','LineWidth',1.5,'MarkerSize',10);
+% legend("Subjective", "Estimated",'Location','northwest')
+% xlim([0 7])
+% ylim([0 15])
+% xticks([1:6])
+% xticklabels(COND_DICT)
+% xtickangle(30)
+% title("Azimuth error in the frontal horizontal hemiplane")
+% ylabel("Azimuth error (°)")
+% xlabel("Device")
+% [r,p] = corrcoef(frontAE_avg,estFrontAEavg)
 
 %distFig();
 %summary = round([ObjFull_target.SourcePosition(hor_idx,1) azEst'])
