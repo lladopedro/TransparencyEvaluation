@@ -70,7 +70,7 @@ for g=N:-1:1
 	% energies
 	xautocorr=sqrt(xl * xl' * xr * xr');
 	%cross-correlation
-	Xcorr_unsc(g,:)=xcorr(xl, xr,50);
+	Xcorr_unsc(g,:)=xcorr(xl, xr, 50);
 	%energy-scaling
 	Xcorr(g,:)=Xcorr_unsc(g,:)/xautocorr;
 	%loudnesses
