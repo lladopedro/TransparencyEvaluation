@@ -52,7 +52,7 @@ filename = {s.name}';
 %filename2 = {'K702mod','HD650','K702','mysphere_closed','mysphere_open','questMS_closed','questMS_open','openEar','openEarControl','quest2'}';
 
 for i = 1:num_meas
-    filename2{i} = filename{i}(1:end-5)
+    filename2{i} = filename{i}(1:end-5);
 end
 
 %% Run CLL calculation
@@ -149,7 +149,7 @@ for i = 1:length(spectralDifference)/length(testDirections)
             xlim([-180 180]);
             %saveFig(h,strcat('Figures/hpTransparency_',string(filename2(i))),2.5);
         else
-            c2.Position = [0.8518 0.2990 0.0214 0.4014]
+            c2.Position = [0.8518 0.2990 0.0214 0.4014];
             printScaled(14, 10, ['Figures/hpTransparency_' (filename2{i}), '_map'], 'png')
             saveas(h,strcat('Figures/hpTransparency_',string(filename2(i))));
 
@@ -183,7 +183,7 @@ else
     % interpolate to a dense equiangular grid first
     % alternative would be: dublicate 180 points to -180
     azDense = -180:180;
-    elDense =  -90:90
+    elDense =  -90:90;
     [Azdense, Eldense] = meshgrid(azDense, elDense);
     Psd = griddata(az, el, psd, Azdense, Eldense, 'cubic');
     
@@ -238,7 +238,7 @@ eleLines = [-60 -30 0 30 60] * pi / 180;
 for iEle = 1:length(eleLines)
     [xyLines] = hap (mod (aziLines + pi, 2 * pi) - pi, ...
         eleLines(iEle) * ones(length(aziLines), 1));
-    xyLines(end) = nan
+    xyLines(end) = nan;
     plot(xyLines(:, 1), xyLines(:, 2), '--', 'color', [1 1 1]*0.5)
     text(xyLines(end/2, 1),xyLines(end/2, 2), [num2str(eleLines(iEle) * 180 / pi) , '^\circ'], 'color', [1 1 1]*0.5, 'fontsize', 10)
 end
@@ -251,7 +251,7 @@ eleLines = linspace(-pi / 2, pi / 2)';
 for iAzi = 1:length(aziLines)
     [xyLines] = hap (mod (aziLines(iAzi) * ones(length(eleLines), 1) + pi, 2 * pi) - pi, ...
         eleLines);
-    xyLines(end) = nan
+    xyLines(end) = nan;
     plot(xyLines(:, 1), xyLines(:, 2), '--', 'color', [1 1 1]*0.5)
     if (aziLines(iAzi)~=0 && aziLines(iAzi)~=pi)
         text(xyLines(end/2+4, 1),xyLines(end/2+4, 2), [num2str(round(aziLines(iAzi) * 180 / pi)) , '^\circ'], 'color', [1 1 1]*0.5, 'fontsize', 10)

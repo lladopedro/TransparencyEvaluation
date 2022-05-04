@@ -1,5 +1,5 @@
 %% FIND ALL SOFA FILES IN FOLDER
-SOFAfolderName = '/Users/lladop1/Documents/MATLAB/AKtools/2_Tools/ThirdParty/HRTFs/SOFA/database/Transparent';
+SOFAfolderName = '../../measurement_data';
 mySOFAfiles = dir(SOFAfolderName+"/*.sofa");
 
 %% LOAD TEMPLATE
@@ -213,7 +213,7 @@ ylim([0 55])
 xticks([1:length(cond_dict)])
 xticklabels([cond_dict])
 yticks([0:10:50])
-ylabel("Front polar error (°)")
+ylabel("Front polar error (??)")
 title("Front polar error in the median plane")
 grid on;
 
@@ -250,7 +250,7 @@ ylim([0 15])
 xticks([1:6])
 xticklabels(cond_dict)
 title("Azimuth error in the frontal horizontal hemiplane")
-ylabel("Front azimuth error (°)")
+ylabel("Front azimuth error (??)")
 grid on;
 
 [raux,paux] = corrcoef(lisTestResults.subjFrontAE,predicted.frontAE(:));
