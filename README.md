@@ -1,3 +1,4 @@
+## Predicting perceptual transparency of head-worn devices
 
 ### Structure
 
