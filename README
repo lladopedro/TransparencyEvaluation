@@ -1,0 +1,19 @@
+This repository is organized as follows:
+
+a) measurement_data
+Contains 6 sofa files of HRTFs of a Kemar dummy head wearing each of the tested conditions.
+
+b) listening_test
+Contains
+  - Results: raw results for colouration and localization tests
+  - Analysis: scripts for the analysis of the listening test results
+  - Stimuli for colouration and localization tests
+  
+c) model
+Contains:
+  - Colouration: CLL-based model to predict colouration from the measurement_data (sofa files)
+  - Localization: Evaluation of the models may2011 and baumgartner2014 to predict the localization data.
+                  These models are available in the Auditory Modelling Toolbox (https://amtoolbox.org/).
+
+d) dependencies
+Contains some auxiliary functions needed to run the main scripts.
