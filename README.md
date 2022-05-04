@@ -18,8 +18,8 @@ Contains:
   - Localization: Evaluation of the models may2011 and baumgartner2014 to predict the localization data.  
                   These models are available in the Auditory Modelling Toolbox (https://amtoolbox.org/).  
 
-#### dependencies  
-Contains some auxiliary functions needed to run the main scripts.  
+#### utility  
+Contains some utility functions needed to run the main scripts.  
 
 
 ### Usage  
