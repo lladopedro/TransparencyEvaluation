@@ -28,6 +28,7 @@ If you want to run the models, first run startup.m to add the relevant
 folders to your matlab path  
 
 For the coloration model go to model/coloration and simply run colorationModel.m  
+For the localization model go to model/localization and run localizationModel.m  
 
 ### Dependencies  
 Apart from the included files, the auditory modelling toolbox (https://amtoolbox.org/) is required 
