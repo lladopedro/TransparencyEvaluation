@@ -31,6 +31,8 @@ folders to your matlab path
 For the coloration model go to model/coloration and simply run colorationModel.m  
 For the localization model go to model/localization and run localizationModel.m  
 
+If you want to test your own devices, simply place them in the measurement_data folder and define which is the open ear reference measurement in the two model scripts  
+
 ### Dependencies  
 Apart from the included files, the auditory modelling toolbox (https://amtoolbox.org/) is required 
 for running the localization models 
